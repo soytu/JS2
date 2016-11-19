@@ -4,13 +4,13 @@
     <meta charset="utf-8">
     <title>HomeWork_lesson2_1</title>
     <style>
-        .main {
+        .main, #main1 {
             height: 200px;
             width: 200px;
             background-color: #442d25;
             border: 1px solid #442d25;
         }
-
+        
         .dark, .dark1, .light, .light1, .aktiv {
             float: left;
             border-radius: 4px;
@@ -74,12 +74,14 @@
 <body>
 <div class="main"></div>
 <div class="main"></div>
-<div class="main"></div>
+<div id="main1"></div>
 
 
 <script type="text/javascript">
 
     function Chessboard(dom_node) {
+
+      dom_node=(document.getElementById(dom_node))? (document.getElementById(dom_node)):(dom_node);
       var div_cell, div_num, div_chess, div_letter;
 
       div_letter = document.createElement('div'); //горизонтальный див для букв
@@ -217,7 +219,6 @@
     };
   }
 
-
   var board = new Chessboard(document.body.childNodes[1]);
   board.run('light', 'dark');
   board.play();
@@ -226,9 +227,11 @@
   board2.run('light1', 'dark1');
   board2.play();
 
-  var board3 = new Chessboard(document.body.childNodes[5]);
+  var board3 = new Chessboard('main1');
   board3.run('light', 'dark');
   board3.play();
+
+  
 </script>
 
 </body>
