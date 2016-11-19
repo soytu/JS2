@@ -7,7 +7,7 @@
 		.main {
 			height: 200px;
 			width: 200px;
-			background-color:  #b58d70;
+			background-color:  #442d25;
 			border:1px solid #442d25;
 		}
 		.dark, .dark1, .light, .light1, .aktiv {
@@ -57,7 +57,7 @@
 			height: 22px;
 			width: 50px;
 			border:1px solid #d6e9c6;
-			background-color: #b58d70;
+			background-color: white;
 			float: left;
 		}
 	</style>
@@ -114,7 +114,7 @@
 		 	 				div_cell.className=light;
 		 	 				div_cell.setAttribute('tabindex','1');
 		 	 				div_chess.appendChild(div_cell);
-		 	 				};
+		 	 				}
  		 			};
 			};
    	};
@@ -156,8 +156,8 @@ var board = new Chessboard(document.body.childNodes[1]);
 board.run('light', 'dark');
 //board.cellName();
 
-//var board1 = new Chessboard(document.body.childNodes[3]);
-//board1.run('light1', 'dark1');
+var board1 = new Chessboard(document.body.childNodes[3]);
+board1.run('light1', 'dark1');
 
 
 	</script>
