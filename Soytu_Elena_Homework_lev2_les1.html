@@ -5,7 +5,7 @@
     <title>HomeWork_lesson2_1</title>
     <style>
         .main, #main1 {
-            height: 200px;
+            height: 250px;
             width: 200px;
             background-color: #442d25;
             border: 1px solid #442d25;
@@ -39,7 +39,7 @@
             background-color: #d6e9c6;
         }
 
-        .aktiv {
+        .active{
             border: 1px solid #d6e9c6;
             background-color: #33FF33;
         }
@@ -63,9 +63,10 @@
 
         #res {
             height: 22px;
-            width: 50px;
+            width: 200px;
             border: 1px solid #d6e9c6;
-            background-color: #5e4431;
+            background-color: #eaeaea;
+            float: left;
         }
     </style>
 </head>
@@ -79,156 +80,87 @@
 
 <script type="text/javascript">
 
-    function Chessboard(dom_node) {
+  function Chessboard(dom_node) {
 
-      dom_node=(document.getElementById(dom_node))? (document.getElementById(dom_node)):(dom_node);
-      var div_cell, div_num, div_chess, div_letter;
+    dom_node=(typeof(dom_node)==='string')?(document.getElementById(dom_node)):(dom_node);
+      
+    var div_letter = document.createElement('div'); //горизонтальный див для букв
+    div_letter.id = "letter";
+    dom_node.appendChild(div_letter);
 
-      div_letter = document.createElement('div'); //горизонтальный див для букв
-      div_letter.id = "letter";
-      dom_node.appendChild(div_letter);
+    var div_num = document.createElement('div'); //вертикальный див для цифр
+    div_num.id = "num";
+    dom_node.appendChild(div_num);
 
-      div_num = document.createElement('div'); //вертикальный див для цифр
-      div_num.id = "num";
-      dom_node.appendChild(div_num);
+    var div_chess = document.createElement('div'); //див для ячеек поля
+    div_chess.id = "chess";
+    dom_node.appendChild(div_chess);
 
-      div_chess = document.createElement('div'); //див для ячеек поля
-      div_chess.id = "chess";
-      dom_node.appendChild(div_chess);
+    div_res = document.createElement('div'); //див для вывода результата нажатия на клетку
+    div_res.id = "res";
+    dom_node.appendChild(div_res);
 
-      if (!document.getElementById('res')) {
-      div_res = document.createElement('div'); //див для вывода результата нажатия на клетку
-      div_res.ID= "res";
-      document.body.appendChild(div_res);} 
+    this.makeCells = function makeCells(light, dark) {
+      var div_cell = document.createElement('div'); //первая ячейка
+      div_cell.className = light;
+      div_letter.appendChild(div_cell);
 
-      this.run = function run(light, dark) {
-        div_cell = document.createElement('div'); //первая ячейка
+      for (i = 0; i < 8; i++) {
+        div_cell = document.createElement('div'); //ячейки с буквами
         div_cell.className = light;
         div_letter.appendChild(div_cell);
+        div_cell.innerText = String.fromCharCode(65 + i);
 
-          for (i = 0; i < 8; i++) {
-            div_cell = document.createElement('div'); //ячейки с буквами
-            div_cell.className = light;
-            div_letter.appendChild(div_cell);
-            div_cell.innerHTML = String.fromCharCode(65 + i);
+        div_cell = document.createElement('div'); //ячейки с цифрами
+        div_cell.className = light;
+        div_num.appendChild(div_cell);
+        div_cell.innerText = (8 - i);
 
-            div_cell = document.createElement('div'); //ячейки с цифрами
-            div_cell.className = light;
-            div_num.appendChild(div_cell);
-            div_cell.innerHTML = (8 - i);
+        for (var j = 0; j < 8; j++) { //ячейки поля
+            div_cell = document.createElement('div');
+            div_cell.setAttribute('tabindex', '1');
+            div_cell.className = ((j + i) % 2 == 0)?dark:light;
+            div_chess.appendChild(div_cell);
+        }
+      }
+    };
 
-            for (var j = 0; j < 8; j++) { //ячейки поля
-              if ((j + i) % 2 == 0) {
-                div_cell = document.createElement('div');
-                div_cell.setAttribute('tabindex', '1');
-                div_cell.className = dark;
-                div_chess.appendChild(div_cell);
-              } else {
-                div_cell = document.createElement('div');
-                div_cell.className = light;
-                div_cell.setAttribute('tabindex', '1');
-                div_chess.appendChild(div_cell);
-              }
-            }
-          }
+    
+    this.play = function play() {
+      function clear() {
+        var active=document.getElementsByClassName('active');
+        if (active[0]) {
+          active[0].classList.remove('active');
+        }
+      };
+      function cellName(i) { //определяю адрес активной ячейки
+        div_res.innerText = String.fromCharCode(65 + i % 8) + (8 - parseInt(i / 8));
       };
 
-      function cellName(i1) { //определяю адрес активной ячейки
-         div_res.innerHTML = String.fromCharCode(65 + i1 % 8) + (8 - parseInt(i1 / 8));
-      }
-
-      this.play = function play() {
-        function delActiv() { //удаление класса активной ячейки
-          if (aktiv) {
-            aktiv.classList.remove('aktiv');
-          }
-          
-        }
-
-        var aktiv = 0; //для активной ячейки, наверно лишняя
-        //var aktiv = document.getElementsByClassName('aktiv');
-        var elems = div_chess.children; //массив ячеек
-        elems = Array.prototype.slice.call(elems);
-
-
-        elems.forEach(function (elem) {
-
-          elem.addEventListener('click', function (event) { //курсором
-            delActiv();
-            elem.classList.add('aktiv');
-            var i = elems.indexOf(elem);
-            cellName(i);
-            aktiv = event.currentTarget;
-          });
-
-          elem.addEventListener('keydown', function (event) { //стрелками
-            delActiv();
-            i = elems.indexOf(elem);
-
-              switch (event.keyCode) {
-
-                case 37: //в лево
-                  if (i % 8 > 0) {
-                    elems[i - 1].classList.add('aktiv');
-                    elem = elems[i - 1];
-                  }
-                  else {
-                    elems[i + 7].classList.add('aktiv');
-                    elem = elems[i + 7];
-                  }
-                    break;
-
-                  case 38: //вверх
-                    if (i >= 8) {
-                        elems[i - 8].classList.add('aktiv');
-                        elem = elems[i - 8];
-                    } else {
-                        elems[i + 56].classList.add('aktiv');
-                        elem = elems[i + 56]
-                    }
-                    break;
-
-                  case 39:
-                    if ((i + 1) % 8 > 0) {    //вправо
-                        elems[i + 1].classList.add('aktiv');
-                        elem = elems[i + 1];
-                    } else {
-                        elems[i - 7].classList.add('aktiv');
-                        elem = elems[i - 7]
-                    }
-                    break;
-
-                  case 40:
-                    if (i < 56) { //вниз
-                        elems[i + 8].classList.add('aktiv');
-                        elem = elems[i + 8];
-                    } else {
-                        elems[i - 56].classList.add('aktiv');
-                        elem = elems[i - 56]
-                    }
-                    break;
-                  default:
-                    alert(event.keyCode);
-
-                  }
-                  var i = elems.indexOf(elem);
-                  cellName(i);
-                  aktiv = elem;
-                });
-      });
+      // ВОПРОС ТУТ.
+      div_chess.addEventListener('click', function (event) { // обработчик на клик
+        clear();
+        event.target.classList.add('active'); // нужен порядковый номер дочернего элемента, на котором произошло событие
+        var elems = div_chess.childNodes;
+        elems.forEach(function() {
+        var i = elems.indexOf(event.target); // так не работает
+        })
+        cellName (i);
+      })
     };
-  }
+
+  };
 
   var board = new Chessboard(document.body.childNodes[1]);
-  board.run('light', 'dark');
+  board.makeCells('light', 'dark');
   board.play();
   
   var board2 = new Chessboard(document.body.childNodes[3]);
-  board2.run('light1', 'dark1');
+  board2.makeCells('light1', 'dark1');
   board2.play();
 
   var board3 = new Chessboard('main1');
-  board3.run('light', 'dark');
+  board3.makeCells('light', 'dark');
   board3.play();
 
   
