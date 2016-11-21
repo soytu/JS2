@@ -91,18 +91,18 @@
     //горизонтальный див для букв
     this.div_letter = document.createElement('div'); //горизонтальный див для букв
     this.div_letter.id = "letter";
-    this.div_letter.style.width = 20px*dimention;
+    this.div_letter.style.width = 20px*this.dimention; // ширина блока должна зависеть от количества клеток доски.
     this.dom_node.appendChild(this.div_letter);
 
     this.div_num = document.createElement('div'); //вертикальный див для цифр
     this.div_num.id = "num";
-    this.div_num.style.height = 20px*dimention;
+    this.div_num.style.height = 20px*this.dimention;
     this.dom_node.appendChild(this.div_num);
 
-    this.div_chess = document.createElement('div'); //див для ячеек поля
+    this.div_chess = document.createElement('div'); //див для клеток поля
     this.div_chess.id = "chess";
-    this.div_chess.style.height = 20px*dimention;
-    this.div_chess.style.width = 20px*dimention;
+    this.div_chess.style.height = 20px*this.dimention;
+    this.div_chess.style.width = 20px*this.dimention;
     this.dom_node.appendChild(this.div_chess);
 
     this.div_res = document.createElement('div'); //див для вывода результата нажатия на клетку
@@ -111,22 +111,22 @@
     var that = this;
 
     this.makeCells = function makeCells(light, dark) {
-      that.div_cell = document.createElement('div'); //первая ячейка
+      that.div_cell = document.createElement('div'); //первая клетка
       that.div_cell.className = light;
       that.div_letter.appendChild(that.div_cell);
 
-      for (i = 0; i < dimention; i++) {
-        that.div_cell = document.createElement('div'); //ячейки с буквами
+      for (i = 0; i < this.dimention; i++) {
+        that.div_cell = document.createElement('div'); //клетки с буквами
         that.div_cell.className = light;
         that.div_letter.appendChild(that.div_cell);
         that.div_cell.innerText = String.fromCharCode(65 + i);
 
-        that.div_cell = document.createElement('div'); //ячейки с цифрами
+        that.div_cell = document.createElement('div'); //клетки с цифрами
         that.div_cell.className = light;
         that.div_num.appendChild(that.div_cell);
         that.div_cell.innerText = (8 - i);
 
-        for (var j = 0; j < dimention; j++) { //ячейки поля
+        for (var j = 0; j < this.dimention; j++) { //клетки поля
             that.div_cell = document.createElement('div');
             that.div_cell.setAttribute('tabindex', '1');
             that.div_cell.className = ((j + i) % 2 == 0)?dark:light;
