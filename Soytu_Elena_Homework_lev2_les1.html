@@ -21,7 +21,7 @@
 
         .dark {
             border: 1px solid #d6e9c6;
-            background-color: #eaeaea;
+            background-color: #acb8ab;
         }
 
         .dark1 {
@@ -31,7 +31,7 @@
 
         .light {
             border: 1px solid #d6e9c6;
-            background-color: #acb8ab;
+            background-color: #eaeaea;
         }
 
         .light1 {
@@ -45,8 +45,8 @@
         }
 
         #chess {
-            height: 180px;
-            width: 180px;
+            height: 177px;
+            width: 177px;
             margin-left: 21px;
         }
 
@@ -61,7 +61,7 @@
             width: 200px;
         }
 
-        #res {
+        .res {
             height: 22px;
             width: 200px;
             border: 1px solid #d6e9c6;
@@ -97,7 +97,7 @@
     dom_node.appendChild(div_chess);
 
     div_res = document.createElement('div'); //див для вывода результата нажатия на клетку
-    div_res.id = "res";
+    div_res.className = "res";
     dom_node.appendChild(div_res);
 
     this.makeCells = function makeCells(light, dark) {
@@ -125,30 +125,67 @@
       }
     };
 
-    
+    this.active = function (event) {
+
+    }
+
     this.play = function play() {
-      function clear() {
+
+      div_chess.addEventListener('click', function (event) { // обработчик на клик
+        clear();
+        event.target.classList.add('active'); // добавляю активный класс выделенной ячейке
+        showActive(eventCellIndex());
+      })
+
+
+      function clear() { //удаление класса активной ячейки
         var active=document.getElementsByClassName('active');
         if (active[0]) {
           active[0].classList.remove('active');
+          var res=document.getElementsByClassName('res');//удаление результатов 
+          for (var i=0; i<res.length; i++)
+          res[i].innerText = '';
         }
       };
-      function cellName(i) { //определяю адрес активной ячейки
-        div_res.innerText = String.fromCharCode(65 + i % 8) + (8 - parseInt(i / 8));
-      };
 
-      // ВОПРОС ТУТ.
-      div_chess.addEventListener('click', function (event) { // обработчик на клик
+      function eventCellIndex (){ //определяю индекс активной ячейки (то же что ячейка, на которой произошло событие)
+        var active = dom_node.getElementsByClassName('active');
+        return [].indexOf.call (active[0].parentNode.children, active[0]); 
+      }
+
+      function showActive(i) { //вывожу адрес активной ячейки в див "рез"
+        var res=dom_node.lastChild;
+        res.innerText = String.fromCharCode(65 + i % 8) + (8 - parseInt(i / 8));
+      }
+
+      div_chess.addEventListener('keydown', function(event) {
+        var i = eventCellIndex ();
+        var elems=event.target.parentNode.children;
+        elems = Array.prototype.slice.call(elems);
         clear();
-        event.target.classList.add('active'); // нужен порядковый номер дочернего элемента, на котором произошло событие
-        var elems = div_chess.childNodes;
-        elems.forEach(function() {
-        var i = elems.indexOf(event.target); // так не работает
-        })
-        cellName (i);
-      })
-    };
 
+        switch (event.keyCode) {
+          case 37: //в лево
+          i=(i%8>0)?(i-1):(i+7);
+          break;
+
+          case 38: //вверх
+          i=(i>=8)?(i-8):(i+56);
+          break;
+
+          case 39: // вправо
+          i=((i+1)%8>0)?(i+1):(i-7);
+          break;
+
+          case 40: //вниз
+          i=(i<56)?(i+8):(i-56);
+          break;
+        }
+        elems[i].classList.add('active');
+        showActive(i);
+     })
+ 
+    };
   };
 
   var board = new Chessboard(document.body.childNodes[1]);
@@ -163,7 +200,6 @@
   board3.makeCells('light', 'dark');
   board3.play();
 
-  
 </script>
 
 </body>
