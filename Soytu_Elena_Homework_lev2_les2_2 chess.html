@@ -1,0 +1,251 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HomeWork_lesson2_2</title>
+
+    <style>
+    @font-face {font-family: "Chess Leipzig";    
+            src: url("http://db.onlinewebfonts.com/t/3766f2535139acb76ae60fb465b731b5.eot");
+            src: url("http://db.onlinewebfonts.com/t/3766f2535139acb76ae60fb465b731b5.eot?#iefix") format("embedded-opentype"),
+                url("http://db.onlinewebfonts.com/t/3766f2535139acb76ae60fb465b731b5.woff2") format("woff2"),
+                url("http://db.onlinewebfonts.com/t/3766f2535139acb76ae60fb465b731b5.woff") format("woff"),
+                url("http://db.onlinewebfonts.com/t/3766f2535139acb76ae60fb465b731b5.ttf") format("truetype"),
+                url("http://db.onlinewebfonts.com/t/3766f2535139acb76ae60fb465b731b5.svg#Chess Leipzig") format("svg");
+        }
+        .main, #main1 {
+            height: 300px;
+            background-color: #442d25;
+            border: 1px solid #442d25;
+        }
+        
+        .dark, .dark1, .light, .light1, .active {
+            float: left;
+            border-radius: 4px;
+            height: 20px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .dark {
+            border: 1px solid #d6e9c6;
+            background-color: #acb8ab;
+        }
+
+        .dark1 {
+            border: 1px solid #d6e9c6;
+            background-color: #465945;
+        }
+
+        .light {
+            border: 1px solid #d6e9c6;
+            background-color: #eaeaea;
+            
+        }
+
+        .light1 {
+            border: 1px solid #6d8c53;
+            background-color: #d6e9c6;
+        }
+
+        .active{
+            border: 1px solid #d6e9c6;
+            background-color: #33FF33;
+        }
+
+        #chess {
+          margin-left: 21px;
+          
+        }
+
+        #num {
+            float: left;
+            width: 20px;
+        }
+
+        #letter {
+            height: 22px;
+        }
+
+        .res {
+            height: 22px;
+            width: 100px;
+            border: 1px solid #d6e9c6;
+            background-color: #eaeaea;
+            float: left;
+        }
+        .play{
+          font-family: "Chess Leipzig";
+        }
+    </style>
+</head>
+
+
+<body>
+<div class="main"></div>
+<div class="main"></div>
+<div id="main1"></div>
+
+
+<script type="text/javascript">
+
+
+// ●  Добавить базовый класс, который мог бы генерировать таблицы (доски) любого размера и унаследовать от него разработанный класс шахматной доски.
+
+
+
+  function Chess (dom_node, dimension){ 
+    this.dimension=dimension;
+    this.dom_node=(typeof(dom_node)==='string')?document.getElementById(dom_node):dom_node;
+    console.log(this.dom_node);
+    //горизонтальный див для букв
+    this.div_letter = document.createElement('div'); //горизонтальный див для букв
+    this.div_letter.id = "letter";
+    this.div_letter.style.width = 22 * (this.dimension+1) + 'px'; // ширина блока в зависимости от количетсва клеток
+    this.dom_node.appendChild(this.div_letter);
+
+    this.div_num = document.createElement('div'); //вертикальный див для цифр
+    this.div_num.id = "num";
+    this.div_num.style.height = 22 * (this.dimension+1) + 'px';
+    this.dom_node.appendChild(this.div_num);
+
+    this.div_chess = document.createElement('div'); //див для клеток поля, здесь исчезает значение this.dimension
+    this.div_chess.id = "chess";
+    this.div_chess.style.height = 22 * this.dimension + 'px';
+    this.div_chess.style.width = 22 * this.dimension + 'px';
+    this.dom_node.appendChild(this.div_chess);
+
+    this.div_res = document.createElement('div'); //див для вывода результата нажатия на клетку
+    this.div_res.className = "res";
+    this.dom_node.appendChild(this.div_res);
+    var that = this;
+    this.makeCells = function makeCells(light, dark) {
+      that.div_cell = document.createElement('div'); //первая клетка
+      that.div_cell.className = light;
+      that.div_letter.appendChild(that.div_cell);
+      for (i = 0; i < that.dimension; i++) {
+        that.div_cell = document.createElement('div'); //клетки с буквами
+        that.div_cell.className = light;
+        that.div_letter.appendChild(that.div_cell);
+        that.div_cell.innerText = String.fromCharCode(65 + i);
+  
+        that.div_cell = document.createElement('div'); //клетки с цифрами
+        that.div_cell.className = light;
+        that.div_num.appendChild(that.div_cell);
+        that.div_cell.innerText = (that.dimension - i);
+  
+        for (var j = 0; j < that.dimension; j++) { //клетки поля
+          that.div_cell = document.createElement('div');
+          that.div_cell.setAttribute('tabindex', '1');
+          that.div_cell.className = ((j + i) % 2 == 0)?dark:light;
+          that.div_cell.classList.add('play');
+          that.div_chess.appendChild(that.div_cell);
+        }
+      }
+    };
+  }
+
+
+  function Chessboard(dom_node, dimension) {
+
+    Chess.apply(this, arguments); 
+    var that = this
+    this.play = function play() {
+
+      this.div_chess.addEventListener('click', function (event) { // обработчик на клик
+        clear();
+        event.target.classList.add('active'); // добавляю активный класс выделенной ячейке
+        showActive(eventCellIndex());
+      })
+
+
+      function clear() { //удаление класса активной ячейки
+        var active=document.getElementsByClassName('active');
+        if (active[0]) {
+          active[0].classList.remove('active');
+          var res=document.getElementsByClassName('res');//удаление результатов 
+          for (var i=0; i<res.length; i++)
+          res[i].innerText = '';
+        }
+      };
+
+      function eventCellIndex (){ //определяю индекс активной ячейки (то же что ячейка, на которой произошло событие)
+        var active = document.getElementsByClassName('active');
+        return [].indexOf.call (active[0].parentNode.children, active[0]); 
+      }
+
+      function showActive(i) { //вывожу адрес активной ячейки в див "рез"
+        var res=that.dom_node.lastChild;
+        res.innerText = String.fromCharCode(65 + i % 8) + (8 - parseInt(i / 8));
+      }
+
+      (function addChess(){ //добавляю фигуры на доску
+         
+        for (var i=0; i<8; i++) {
+          that.div_chess.children[i+8].innerText='p';
+          that.div_chess.children[55-i].innerText='o';
+         };
+        that.div_chess.children[0].innerText='r';
+        that.div_chess.children[7].innerText='r';
+        that.div_chess.children[1].innerText='n';
+        that.div_chess.children[6].innerText='n';
+        that.div_chess.children[2].innerText='b';
+        that.div_chess.children[5].innerText='b';
+        that.div_chess.children[3].innerText='q';
+        that.div_chess.children[4].innerText='k';
+
+        that.div_chess.children[63-0].innerText='t';
+        that.div_chess.children[63-7].innerText='t';
+        that.div_chess.children[63-1].innerText='m';
+        that.div_chess.children[63-6].innerText='m';
+        that.div_chess.children[63-2].innerText='v';
+        that.div_chess.children[63-5].innerText='v';
+        that.div_chess.children[63-3].innerText='w';
+        that.div_chess.children[63-4].innerText='l';
+      })();
+
+      this.div_chess.addEventListener('keydown', function(event) {
+        var i = eventCellIndex ();
+        var elems=event.target.parentNode.children;
+        elems = Array.prototype.slice.call(elems);
+        clear();
+
+        switch (event.keyCode) {
+          case 37: //в лево
+          i=(i%8>0)?i-1:i+7;
+          break;
+
+          case 38: //вверх
+          i=(i>=8)?i-8:i+56;
+          break;
+
+          case 39: // вправо
+          i=((i+1)%8>0)?i+1:i-7;
+          break;
+
+          case 40: //вниз
+          i=(i<56)?i+8:i-56;
+          break;
+        }
+        elems[i].classList.add('active');
+        showActive(i);
+     })
+    };
+  };
+
+  var board = new Chessboard(document.body.childNodes[1], 10);
+  board.makeCells('light', 'dark');
+
+  var board1 = new Chessboard(document.body.childNodes[3], 8);
+  board1.makeCells('light1', 'dark1');
+  board1.play();
+
+  var board2 = new Chessboard('main1', 8);
+  board2.makeCells('light', 'dark');
+  board2.play();
+ 
+
+</script>
+
+</body>
+</html>
