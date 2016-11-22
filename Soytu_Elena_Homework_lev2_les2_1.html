@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HomeWork_lesson2_2</title>
+    
+    <style>
+        li {
+            
+            background-color: #fdd5b1;
+            border: 1px solid #442d25;
+        }
+    </style>
+    
+</head>
+
+<body>
+
+<script type="text/javascript">
+
+function getPhones(url) { //запрос списка
+  this.xhr = new XMLHttpRequest(); 
+  this.xhr.open('get', url, true);
+  this.xhr.send();
+  that=this;
+  this.xhr.onreadystatechange = function() { // (3)
+    if (that.xhr.status != 200) {
+    alert(that.xhr.status + ': ' + that.xhr.statusText);
+    } else if (that.xhr.readyState === 4) {
+      showList(JSON.parse(that.xhr.responseText));
+    }
+  };
+};
+
+function showList(obj) { //показываю список наименований
+  for (key in obj) {
+    this.li = document.createElement('li');
+    document.body.appendChild(this.li);
+    this.li.innerText=obj[key].name;
+  }
+}
+
+var phones= new getPhones('https://dl.dropboxusercontent.com/u/53408179/phones.json');
+
+
+</script>
+
+
+
+</body>
+</html>
