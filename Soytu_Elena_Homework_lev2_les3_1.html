@@ -1,0 +1,91 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HomeWork_lesson2_2</title>
+    
+  <style>
+    .correct {
+      background-color: green;
+    }
+    .error {
+      background-color: red;
+    }
+
+  </style>
+    
+</head>
+
+<body>
+
+<script type="text/javascript">
+
+  //● Напишите регулярное выражение для поиска HTML-цвета, заданного как #ABCDEF, то есть # и содержит затем 6 шестнадцатеричных символов.
+  var str = '#23aaad, hjkshjh,#3628FD';
+  var result = str.match(/#[0-9A-F]{6}/gi);
+  console.log(result);
+
+  //● Создайте регэксп, который ищет все положительные числа, в том числе и с десятичной точкой. Например, var str = "1.5 0 12. 123.4."
+  str = '1.5 jvkflk0 12.dfvkk123.4.mkmm -25 -jjk 0 0.25';
+  result = str.match(/([1-9](\d+)?(\.\d+)?)|(0\.\d+)/g);
+  console.log(result);
+
+  //● Время может быть в формате часы:минуты или часы-минуты. И часы и минуты состоят из двух цифр, например 09:00, 21-30. Напишите регулярное выражение для поиска   времени
+  str = '1.5 jvkf22-00lk0 12.dfv21:52kk123.4.mkmm -25 -jjk 0 0.25 28:52 02-13 15:63';
+  result = str.match(/([01]\d|2[0-4])[-:][0-5]\d/g);
+  console.log(result);
+</script>
+
+<form action=""> 
+  <fieldset> 
+    <legend>Следующие сущности</legend> 
+    <p> Паспорт № <input type="text" placeholder="Серия Номер" placeholder="+7(---) --- -- --"> </p>
+    <p> Электронная почта <input type="email"  placeholder="e-mail"> </p>
+    <p> Телефон <input type="text" size="20" placeholder="+7-(---) --- -- --"> </p>
+    <br/>
+    <input type="submit" value="Отправить">
+    <input type="reset" value="Очистить">
+    <input type="submit" value="Сохранить">
+  </fieldset> 
+</form>
+
+<script type="text/javascript">
+// ● Написать регулярные выражения для следующих сущностей: номер телефона в формате +7(965)-123-45-67, email, серии и номера паспорта. Применить --/>
+ //написанные регулярные выражения необходимо для валидации произвольной формы, в которой обязательно должны присутствовать описанные выше поля. Поля, которые проходят валидацию подсветить зеленым, остальные – красным.  
+
+//проверка данных
+
+  (function checkFieldset() {
+    var data=document.getElementsByTagName('input');  //коллекция полей в форме
+    var fieldset = document.getElementsByTagName('fieldset'); //форма
+    var correctData = {                             //регэкспы для сущностей
+      pasport: /^\d{4}\ ?\d{6}$/,
+      email: /\w+\@[a-z]+\.[a-z]+/i,
+      phone: /\+\d\-\(\d{3}\)\-\d{3}\-\d{2}\-\d{2}/
+    };
+    function checkData (i,correctData){             // функция подсветки зеленым или красным
+      data[i].className = (data[i].value.match(correctData))?'correct':'error';
+    }
+
+    fieldset[0].addEventListener('keyup', function (event) { // обработчик на форму
+    
+      switch (event.target) {
+        case data[0]:                    // паспорт
+        checkData (0,correctData.pasport);
+        break;
+
+        case data[1]:                    //электронная почта
+        checkData (1,correctData.email);
+        break;
+
+        case data[2]:                   // телефон
+        checkData (2,correctData.phone);
+        break;
+      }
+    })
+  })()
+  
+</script> 
+
+</body>
+</html>
