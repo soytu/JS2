@@ -1,0 +1,129 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HomeWork_lesson4_1</title>
+    
+  <style>
+  
+  .clock {
+    margin: 0px auto;
+    background-color: pink;
+    height: 62px;
+    width: 152px;
+    }
+  .scoreboard {
+    background-color: #e8d568;
+    text-align: center;
+    height: 30px;
+    width: 150px;
+    border: 1px solid #d6e9c6;
+    }
+  .button {
+    background-color: #c5b881;
+    height: 30px;
+    width: 50px;
+   }
+  #now, #now1, #now2, #now3 {
+    border: 1px solid #d6e9c6;
+    height: 100px;
+    width: 200px;
+   }
+  #now {
+    background-color: #5f492d;
+    }
+  #now1 {
+    background-color: #89070b;
+    }
+  #now2 {
+    background-color: #5f492d;
+    }
+  
+  </style>
+    
+</head>
+
+<body>
+
+  <div id='now'></div>
+  <div id='now1'></div>
+  <div id='now2'></div>
+  
+  
+  <script type="text/javascript">
+  'use strict'
+  
+  
+  function Clock (element){
+    
+    var scoreboard; // табло для часов
+   
+    function render() {  // геренирую часы  
+      var elem = document.createElement('div'); //добавляю блок для часов
+      elem.className = 'clock';
+      element.appendChild(elem);
+  
+      scoreboard = document.createElement('div'); // добавляю табло
+      scoreboard.className = 'scoreboard';
+      elem.appendChild(scoreboard);
+           
+      function addButton(name) {    // функция добавления кнопок
+        var button = document.createElement('button');
+        button.name = name;
+        button.innerText = name;
+        button.className = 'button';
+        elem.appendChild(button);
+        return button;
+        }
+  
+      elem.start = addButton('Старт'); // добавление кнопок
+      elem.stop = addButton('Стoп');
+      elem.alert = addButton('Алерт');
+      return elem;
+    };
+  
+    var elem=render();
+      
+    function time(){                                                           // возвращает текущее время в формате 00:00:00
+      var date = new Date();
+      var hours = date.getHours()>9?date.getHours():'0'+date.getHours();
+      var minutes = date.getMinutes()>9?date.getMinutes():'0'+date.getMinutes();
+      var seconds = date.getSeconds()>9?date.getSeconds():'0'+date.getSeconds();
+      return hours+':'+minutes+':'+seconds;
+    }
+  
+    var timer;                           //вывод времени
+    function start () {
+      timer=setInterval(function() {
+      scoreboard.innerText = time()}, 1000);
+    }  
+   
+    function stop() {
+      setTimeout(function() {clearInterval(timer)})
+    }
+  
+    //elem.onmousedown = function() {    //заклинание
+    //    return false;
+    //};
+  
+    elem.onclick = function(event) {
+      if (event.target==elem.start) start();  
+      if (event.target==elem.stop) stop();
+      if (event.target==elem.alert) alert('проверка');
+    } 
+
+    this.start=start;
+    this.stop=stop; 
+   
+  }
+  
+  var elem = document.getElementById('now1');
+  var clock = new Clock(elem);
+  
+  clock.start();
+  clock.stop();
+  
+  </script> 
+
+</body>
+</html>
