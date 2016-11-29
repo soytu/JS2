@@ -1,0 +1,62 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HomeWork_lesson4_2</title>
+    
+  <style>
+  #voter {
+    background-color:#84595e;
+    width: 50px;
+  }
+  .vote {
+    color: #2e2432;
+    background-color:#59ace9;
+  }
+  .down, .up{
+    color: #7f4c38;
+    background-color:#cea27d;
+  }
+  </style>
+    
+</head>
+
+<body>
+
+  <div id="voter" class="voter">
+    <span class="down">—</span>
+    <span class="vote">0</span>
+    <span class="up">+</span>
+  </div>
+
+
+  <script type="text/javascript">
+  'use strict'
+  
+  function Voter(options) {
+    var elem = options.elem;
+
+    this.setVote=function(vote) {
+      elem.children[1].innerText=vote;
+    }
+
+    elem.onclick= function() {
+      if (event.target==elem.children[0]) voteDown();
+      if (event.target==elem.children[2]) voteUp();
+    }
+
+    function voteDown (){
+      elem.children[1].innerText=+elem.children[1].innerText-1;
+    }
+
+    function voteUp(){
+      elem.children[1].innerText=+elem.children[1].innerText+1;
+    }
+  };
+
+  var voter = new Voter({elem: document.getElementById('voter')});
+  voter.setVote(20);
+  </script>
+
+</body>
+</html>
