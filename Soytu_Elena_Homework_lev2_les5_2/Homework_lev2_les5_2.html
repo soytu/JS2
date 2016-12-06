@@ -1,0 +1,75 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>HomeWork_lesson5_2</title>
+<script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+    <style>
+      input{
+        width: 350px;
+      }
+    </style>
+</head>
+
+
+<body>
+<form id="userdata"> 
+  <fieldset> 
+    <legend>Напишите нам</legend> 
+    <p> Ваше имя <input type="text" name="username" placeholder="Ваше Имя"> </p>
+    <p> Пароль <input type="text" name="password" placeholder="******"> </p>
+    <p> Электронная почта <input type="text" name="email" placeholder="e-mail"> </p>
+    <p> Пол (М, Ж) <input type="text" name="gender"> </p>
+    <p> Кредитная карта <input type="text" name="credit" placeholder="0000000-0000-000000-000"> </p>
+    <p> Био <input type="text" name="bio" placeholder="This is good! I think I will switch to another language"> </p>
+    <p> Дата <input type="text" name="birth" placeholder="00.00.0000"> </p>
+    <input type="button" value="Отправить">
+  </fieldset> 
+</form>
+
+<script type="text/javascript">
+
+(function($) {
+  function getData (){   //возвращает объект для отправки на проверку
+      var obj={};
+      obj.username = $("input[name='username']").val();
+      obj.password = $("input[name='password']").val();
+      obj.email = $("input[name='email']").val();
+      obj.gender = $("input[name='gender']").val();
+      obj['credit'] = $("input[name='credit']").val();
+      obj.bio = $("input[name='bio']").val();
+      obj.date = $("input[name='date']").val();
+      return obj;
+    }
+
+  $("input[type='button']").on("click", function sendData (){ //отправляет данные и показывает результат
+    
+    $.ajax({
+      type: "POST",
+      data: getData (),
+      url:'validator.php', 
+      success:function(data){
+        showResult(data);
+      }
+    });
+  })
+      
+  function showResult(data){ //функция вывода результата 
+    var res=JSON.parse(data);
+    if (res.result) alert('Данные успешно отправлены')
+      else showError(res.error);
+  }
+
+  function showError(error) { //выводит ошибку, в те же поля инпут, больше не успела.
+    $.each(error, function (key, value){
+      var key=key.toLowerCase().split(' ');
+      $("input[name=" + key[0] + "]").val(value);
+    })
+  }
+
+})(jQuery);
+
+</script>
+
+</body>
+</html>
