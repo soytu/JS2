@@ -1,0 +1,118 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>HomeWork_lesson6</title>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <script src="jquery-ui.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="jquery-ui.min.css">
+  
+  <style>
+
+    body{
+      font-size: 16px;
+      color:#380604;
+    }
+    input{
+      width: 300px;
+    }
+    .fieldname {
+      width: 200px;
+    }
+    fieldset {
+      background-color: #A9F5A9;
+    }
+  </style>
+</head>
+
+
+<body>
+<form id="userdata"> 
+  <fieldset> 
+    <legend>Напишите нам</legend> 
+    <p> <p class='fieldname'>Ваше имя </p> <input type="text" name="username" placeholder="Ваше Имя"> </p>
+    <p> <p class='fieldname'>Пароль </p><input type="text" name="password" placeholder="******"> </p>
+    <p> <p class='fieldname'>Электронная почта </p> <input type="text" name="email" placeholder="e-mail"> </p>
+    <p> <p class='fieldname'>Пол (m, f) </p> <input type="text" name="gender" placeholder="*"> </p>
+    <p> <p class='fieldname'>Кредитная карта </p> <input type="text" name="credit" placeholder="0000000-0000-000000-000"> </p>
+    <p> <p class='fieldname'>Био </p> <input type="text" name="bio" placeholder="This is good! I think I will switch to another language"> </p>
+    <p> <p class='fieldname'>Дата рождения </p> <input type="text" name="birth" placeholder="YYYY-MM-DD"> </p>
+    <input type="button" value="Отправить">
+  </fieldset> 
+</form>
+<div id='progressbar'></div>
+<div id='dialog' title='Ошибка заполнения данных'>
+<p></p>
+
+<script type="text/javascript">
+
+(function($) {
+  
+  $(document).ready(function (){          //добавляю календарь в поле даты
+    $("input[name='birth']").datepicker({
+      dateFormat: "yy-mm-dd",
+      changeYear: true
+      });
+    $('#progressbar').progressbar();
+  });
+  
+  $('form').on('change', function(event){                     // добавляет виджет progressbar  
+    $('#progressbar').progressbar({value: getProgressVal ()});
+  
+  });    
+   
+
+  function getProgressVal () {                              //считает процент заполнения полей данными
+    var counter=0;
+    $("input[type='text']").each(function(indx, elem){
+      if ($(this).val()) {
+        counter++;
+      }
+    });
+    return counter*100/7;
+  }      
+
+  function getData (){   //возвращает объект для отправки на проверку
+    var obj={};
+    obj.username = $("input[name='username']").val();
+    obj.password = $("input[name='password']").val();
+    obj.email = $("input[name='email']").val();
+    obj.gender = $("input[name='gender']").val();
+    obj['credit'] = $("input[name='credit']").val();
+    obj.bio = $("input[name='bio']").val();
+    obj.date = $("input[name='birth']").val();
+    return obj;
+  }
+
+  $("input[type='button']").on("click", function sendData (){ //отправляет данные и показывает результат
+    
+    $.ajax({
+      type: "POST",
+      dataType: 'json',
+      data: getData (),
+      url:'validator.php', 
+      success: showResult   
+    });
+  })
+      
+  function showResult(data){ //выводит результат
+    if (data.result) alert('Данные успешно отправлены')
+      else showError(data.error);
+  }
+
+  function showError(error) { //выводит ошибку в виджет 'диалог' и добавляет эфект на поля с ошибкой
+    $('#dialog').dialog();
+    $('#dialog').find('p').remove(); //удаляет сообщения от преддущей проверки 
+    $.each(error, function (key, value){
+      $('#dialog').append('<p>'+value+'<p>');
+      var key=key.toLowerCase().split(' ');
+      $("input[name=" + key[0] + "]").effect('bounce');
+    })
+  }
+
+})(jQuery);
+
+</script>
+
+</body>
+</html>
