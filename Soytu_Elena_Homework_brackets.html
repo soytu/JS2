@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <title>Brackers</title>
+   
+  <style>
+  input {
+    width: 300px;
+  }
+  </style>
+    
+</head>
+
+<body>
+
+  <input type="text" placeholder="введите текс для проверки">
+  <div></div>
+  
+  <script>
+  
+    (function($) {
+      function delClosedBrackets(str){
+        var reg=/\([^([\]{})]*\)|\[[^()[{}\]]*\]|{[^()[\]{}]*}/g; // RegExp для поиска комплектов скобок с любыми другими символами внури них 
+        if (reg.test(str)) {
+          return delClosedBrackets(str.replace(reg, '')); //удаляет комплекты скобок и передает снова на проверку
+          } else {
+            $('div').text(checkResult(str)); // записывает результаты функции проверки в див
+        };
+      };
+    
+      function checkResult (str){ 
+        var reg =/[()[\]{}]/;  //RegExp для проверки оставшихся лишних скобок
+        return (reg.test(str))?false:true; 
+      }
+      
+      $('input').on('change', function (event){
+        var start = new Date;                      // Засекаю время
+        delClosedBrackets($('input').val());
+        var end = new Date;
+        console.log( "Время выполнения " + (end - start) + " ms" );
+      })
+    })(jQuery);  
+
+  </script>
+
+</body>
+</html>
