@@ -32,7 +32,7 @@
     
       function checkResult (str){ 
         var reg =/[()[\]{}]/;  //RegExp для проверки оставшихся лишних скобок
-        return (!reg.test(str)); 
+        return !reg.test(str); 
       }
       
       $('input').on('change', function (event){
