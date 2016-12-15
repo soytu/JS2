@@ -17,16 +17,14 @@
         if (reg.test(str)) {
           return checkBrackets(str.replace(reg, '')); //удаляет комплекты скобок и передает снова на проверку
           } else {
-            return checkResult (str)
+            return (function checkResult (str){ 
+               var reg =/[()[\]{}]/;  //RegExp для проверки оставшихся лишних скобок
+               return !reg.test(str);
+               })(str);
             };
       };
-    
-      function checkResult (str){ 
-         var reg =/[()[\]{}]/;  //RegExp для проверки оставшихся лишних скобок
-         return !reg.test(str); 
-       }
-      
-        console.log( checkBrackets('{([()])}'));
+     
+      console.log( checkBrackets('{([()])}'));
         
   </script>
 
