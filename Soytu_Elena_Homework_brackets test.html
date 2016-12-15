@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+  <meta charset="utf-8">
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+  <title>Brackers</title>
+   
+  
+    
+</head>
+
+<body>
+
+  <script>
+  "use strict";
+    
+      function delClosedBrackets(str){
+        var reg=/\([^([\]{})]*\)|\[[^()[{}\]]*\]|{[^()[\]{}]*}/g; // RegExp для поиска комплектов скобок с любыми другими символами внури них 
+        if (reg.test(str)) {
+          return delClosedBrackets(str.replace(reg, '')); //удаляет комплекты скобок и передает снова на проверку
+          } else {
+            return checkResult(str); // записывает результаты функции проверки в див
+        };
+      };
+    
+      function checkResult (str){ 
+        var reg =/[()[\]{}]/;  //RegExp для проверки оставшихся лишних скобок
+        return !reg.test(str); 
+      }
+      
+        console.log( delClosedBrackets('{([()])}'));
+        
+        
+     
+   
+
+  </script>
+
+</body>
+</html>
