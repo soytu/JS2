@@ -7,7 +7,7 @@
     var scoreboard; // табло для часов
    
     function render() {  // геренирую часы  
-      var elem = document.createElement('div'); //добавляю блок для часов
+      var elem = document.createElement('div'); //добавляю блок для часов..
       elem.className = 'clock';
       element.appendChild(elem);
   
