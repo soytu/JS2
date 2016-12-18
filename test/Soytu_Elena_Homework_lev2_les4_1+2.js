@@ -64,12 +64,16 @@
     this.stop=stop; 
    
   }
-  
+document.addEventListener("DOMContentLoaded", addClock);
+
+function addClock(){
   var elem = document.getElementById('now1');
   var clock = new Clock(elem);
   
   clock.start();
   clock.stop();
+}  
+
   function Voter(options) {
     var elem = options.elem;
 
@@ -91,6 +95,10 @@
     }
   };
 
+  
+document.addEventListener("DOMContentLoaded", addVouter);
+
+function addVouter(){
   var voter = new Voter({elem: document.getElementById('voter')});
   voter.setVote(20);
-  
+} 
