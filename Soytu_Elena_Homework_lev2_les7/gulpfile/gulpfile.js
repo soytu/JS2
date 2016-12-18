@@ -1,11 +1,13 @@
 'use strict'
-var gulp = require('gulp');
-var browserSync = require('browser-sync');
-var useref = require('gulp-useref');
-var uglify = require('gulp-uglify');
-var cleanCSS = require('gulp-clean-css');
-var gulpIf = require('gulp-if');
-var jade = require('gulp-jade');
+const gulp = require('gulp');
+const browserSync = require('browser-sync');
+const useref = require('gulp-useref');
+const uglify = require('gulp-uglify');
+const cleanCSS = require('gulp-clean-css');
+const gulpIf = require('gulp-if');
+const jade = require('gulp-jade');
+const babel = require('gulp-babel');
+
 
 gulp.task('browserSync', function() {
   browserSync({
@@ -35,13 +37,20 @@ gulp.task('watch', ['browserSync', 'css'], function (){
 
 });
 
-gulp.task('useref', ['jade'], function(){ 
+gulp.task('default', () =>
+    gulp.src('app/ES6_js/*.js')
+        .pipe(babel({
+            presets: ['es2015']
+        }))
+        .pipe(gulp.dest('app/js'))
+);
+
+gulp.task('useref', ['default','jade'], function(){ 
   return gulp.src('app/*.html')
     .pipe(useref())
     .pipe(gulpIf('*.css', cleanCSS()))
     .pipe(gulpIf('*.js', uglify()))
     .pipe(gulp.dest('dist'))
-
 });
 
 
