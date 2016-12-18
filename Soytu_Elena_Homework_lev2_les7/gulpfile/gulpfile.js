@@ -9,14 +9,14 @@ const jade = require('gulp-jade');
 const babel = require('gulp-babel');
 
 
-gulp.task('browserSync', function() {
+gulp.task('browserSync', () => {
   browserSync({
     server: {
       baseDir: 'app'
     },
   })
 })
-gulp.task('css', function() {
+gulp.task('css', () => {
   return gulp.src('app/css/**/*.css')
     .pipe(gulp.dest('app/css'))
     .pipe(browserSync.reload({
@@ -24,13 +24,13 @@ gulp.task('css', function() {
     }))
 });
 
-gulp.task('jade', function(){
+gulp.task('jade', () => {
   return gulp.src('app/templates/*.jade')
     .pipe(jade({pretty:true}))
     .pipe(gulp.dest('app'));
 });
 
-gulp.task('watch', ['browserSync', 'css'], function (){
+gulp.task('watch', ['browserSync', 'css'], () =>{
   gulp.watch('app/css/**/*.css', ['css']); 
   gulp.watch('app/*.html', browserSync.reload); 
   gulp.watch('app/js/**/*.js', browserSync.reload); 
@@ -45,7 +45,7 @@ gulp.task('default', () =>
         .pipe(gulp.dest('app/js'))
 );
 
-gulp.task('useref', ['default','jade'], function(){ 
+gulp.task('useref', ['default','jade'], () =>{ 
   return gulp.src('app/*.html')
     .pipe(useref())
     .pipe(gulpIf('*.css', cleanCSS()))
